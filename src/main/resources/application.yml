@@ -1,3 +1,7 @@
+logging:
+  level:
+    root: DEBUG
+
 spring:
   datasource:
     url: jdbc:postgresql://db:5432/my-startup-db
