@@ -4,6 +4,9 @@ FROM openjdk:17-jdk-slim AS build
 # Set the working directory in the image to "/app"
 WORKDIR /app
 
+# Install the necessary tools and libraries
+RUN apt-get update && apt-get install -y libtcnative-1 && rm -rf /var/lib/apt/lists/*
+
 # Copy the Gradle executable to the image
 COPY gradlew ./
 
@@ -24,6 +27,9 @@ FROM openjdk:17-jdk-slim
 
 # Set the working directory to '/app'
 WORKDIR /app
+
+# Install the necessary tools and libraries
+RUN apt-get update && apt-get install -y libtcnative-1 && rm -rf /var/lib/apt/lists/*
 
 # Copy the jar file from the first stage
 COPY --from=build /app/build/libs/*.jar app.jar
