@@ -1,12 +1,8 @@
-logging:
-  level:
-    root: DEBUG
-
 spring:
   datasource:
-    url: jdbc:postgresql://db:5432/my-startup-db
-    username: admin
-    password: admin
+    url: ${DB_URL:jdbc:postgresql://db:5432/my-startup-db}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:admin}
   jpa:
     hibernate:
       ddl-auto: update
