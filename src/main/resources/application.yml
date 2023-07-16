@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/my-startup-db
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
