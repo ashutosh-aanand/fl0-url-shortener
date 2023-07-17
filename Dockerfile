@@ -1,32 +1,25 @@
-# Start with a base image containing Java runtime (AdoptOpenJDK)
-FROM openjdk:17-jdk-slim AS build
-
-# Set the working directory in the image to "/app"
+# Stage 1: Build the application
+FROM gradle:jdk8 AS build
 WORKDIR /app
 
-# Copy the Gradle executable to the image
-COPY gradlew ./
+# Copy the Gradle build files
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradlew .
 
-# Copy the 'gradle' folder to the image
-COPY gradle ./gradle
+# Copy the source code
+COPY src ./src
 
-# Give permission to execute the gradle script
-RUN chmod +x ./gradlew
+# Build the application
+RUN ./gradlew build
 
-# Copy the rest of the application source code
-COPY . .
+# Stage 2: Create the final image
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+EXPOSE 8080
 
-# Use Gradle to build the application
-RUN sh ./gradlew build
-
-# Set up a second stage, which will only keep the compiled application and not the build tools and source code
-FROM openjdk:17-jdk-slim
-
-# Set the working directory to '/app'
-WORKDIR /app
-
-# Copy the jar file from the first stage
+# Copy the JAR file from the build stage to the final image
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Set the startup command to execute the jar
-CMD ["java", "-jar", "/app/app.jar"]
+# Set the entrypoint to run the application
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]

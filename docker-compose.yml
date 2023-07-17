@@ -1,8 +1,19 @@
-version: '3.8'
+version: '3.1'
 services:
-  your-app-name:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  app:
+    container_name: app-springboot-postgresql
+    image: app-springboot-postgresql
+    build: ./
     ports:
       - "8080:8080"
+    depends_on:
+      - dbpostgresql
+  dbpostgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mydb
+
