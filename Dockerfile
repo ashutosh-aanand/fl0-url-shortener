@@ -2,16 +2,20 @@
 FROM gradle:jdk8 AS build
 WORKDIR /app
 
-# Copy the Gradle build files
-COPY build.gradle .
-COPY settings.gradle .
-COPY gradlew .
+# Copy the Gradle executable to the image
+COPY gradlew ./
 
-# Copy the source code
-COPY src ./src
+# Copy the 'gradle' folder to the image
+COPY gradle ./gradle
 
-# Build the application
-RUN ./gradlew build
+# Give permission to execute the gradle script
+RUN chmod +x ./gradlew
+
+# Copy the rest of the application source code
+COPY . .
+
+# Use Gradle to build the application
+RUN sh ./gradlew build
 
 # Stage 2: Create the final image
 FROM openjdk:8-jdk-alpine
